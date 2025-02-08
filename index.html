@@ -1,9 +1,177 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Sayfası</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geri Sayım</title>
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Genel ayarlar */
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1d2b64, #f8cdda);
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    header h1 {
+      font-size: 3em;
+      color: #1d2b64;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    /* Navigasyon butonları */
+    .event-nav {
+      margin-bottom: 30px;
+    }
+    .event-nav button {
+      background: #1d2b64;
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      margin: 10px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1em;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .event-nav button:hover,
+    .event-nav button.active {
+      background: #142055;
+      transform: scale(1.1);
+    }
+    /* Sayaç alanı (yatay düzenli) */
+    .countdown-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+    .circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f8cdda, #1d2b64);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4em;
+      font-weight: 600;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      border: 4px solid #fff;
+      transition: transform 0.3s;
+    }
+    .circle:hover {
+      transform: scale(1.05);
+    }
+    .circle span {
+      font-size: 0.5em;
+      margin-top: 10px;
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 1em;
+      color: #1d2b64;
+    }
+    @media (max-width: 480px) {
+      header h1 { font-size: 2em; }
+      .circle { width: 140px; height: 140px; font-size: 1.2em; }
+      .event-nav button { padding: 10px 20px; font-size: 0.9em; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Merhaba! Site çalışıyor
+  <div class="container">
+    <header>
+      <h1>Geri Sayım</h1>
+    </header>
+    <nav class="event-nav">
+      <button data-event="msu" class="active">MSÜ</button>
+      <button data-event="tyt">TYT</button>
+      <button data-event="ayt">AYT</button>
+      <button data-event="mülakat">Mülakat</button>
+    </nav>
+    <div id="countdownDisplay" class="countdown-display">
+      <!-- Sayaç daireleri burada gösterilecek -->
+    </div>
+    <footer>
+      <p>Hedeflerine ulaşmak için zamanı iyi kullan!</p>
+    </footer>
+  </div>
+  
+  <script>
+    // Sınav tarihleri (tarih ve saat ayarlamalarını ihtiyacınıza göre düzenleyin)
+    const events = {
+      msu: new Date("February 23, 2025 10:15:00").getTime(),
+      tyt: new Date("June 21, 2025 10:15:00").getTime(),
+      ayt: new Date("June 22, 2025 10:15:00").getTime(),
+      mülakat: new Date("July 9, 2025 07:00:00").getTime()
+    };
+    
+    let activeEvent = "msu";
+    
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = events[activeEvent] - now;
+      const displayDiv = document.getElementById("countdownDisplay");
+      
+      if (distance < 0) {
+        displayDiv.innerHTML = "<p>Süre doldu!</p>";
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      displayDiv.innerHTML = `
+        <div class="circle">
+          ${days} <span>Gün</span>
+        </div>
+        <div class="circle">
+          ${hours} <span>Saat</span>
+        </div>
+        <div class="circle">
+          ${minutes} <span>Dakika</span>
+        </div>
+        <div class="circle">
+          ${seconds} <span>Saniye</span>
+        </div>
+      `;
+    }
+    
+    document.querySelectorAll(".event-nav button").forEach(button => {
+      button.addEventListener("click", function() {
+        activeEvent = this.getAttribute("data-event");
+        document.querySelectorAll(".event-nav button").forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+        updateCountdown();
+      });
+    });
+    
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
