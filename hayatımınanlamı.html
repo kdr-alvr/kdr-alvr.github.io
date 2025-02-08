@@ -10,14 +10,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <style>
-    /* Tüm metin seçimini devre dışı bırak */
+    /* Genel kutu modeli ve metin seçiminin devre dışı bırakılması */
     * {
+      box-sizing: border-box;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
     }
-    /* Dinamik arka plan için animasyonlu gradient (10s, yoğun) */
+    /* Dinamik arka plan için animasyonlu gradient */
     body {
       margin: 0;
       padding: 0;
@@ -31,6 +32,7 @@
       min-height: 100vh;
       color: #fff;
       position: relative;
+      overflow-x: hidden;
       overflow-y: auto;
       transition: background 0.5s;
       padding: 20px;
@@ -106,7 +108,7 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       text-align: center;
       max-width: 600px;
-      width: 90%;
+      width: 100%;
       margin: 20px auto;
     }
     .container h1 {
@@ -115,7 +117,7 @@
       font-family: 'Dancing Script', cursive;
       position: relative;
     }
-    /* Başlıktaki kalp animasyonu */
+    /* Kalp animasyonu */
     .heart {
       display: inline-block;
       color: #ff4b5c;
@@ -274,6 +276,7 @@
       padding-left: 10px;
       font-size: 1.2rem;
     }
+    /* Fotoğraf Galerisi: Sabit resim */
     #galleryContainer {
       width: 100%;
       height: 200px;
@@ -281,12 +284,14 @@
       overflow: hidden;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
     }
     #galleryContainer img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+    /* Aşk Notu Bölümü */
     #loveNotesSection textarea {
       width: 100%;
       height: 80px;
@@ -338,27 +343,6 @@
       height: 100%;
       background: #ff4b5c;
       transition: width 0.5s;
-    }
-    /* Ek: Fotoğraf Düzenleme Bölümü */
-    #galleryEditSection {
-      margin-top: 15px;
-      text-align: center;
-    }
-    #galleryEditSection input {
-      padding: 5px;
-      width: 70%;
-      border-radius: 5px;
-      border: none;
-      margin-bottom: 5px;
-    }
-    #galleryEditSection button {
-      background: #ff4b5c;
-      border: none;
-      padding: 5px 10px;
-      font-size: 1rem;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -414,22 +398,18 @@
         <h3>Aşk Hikayesi Zaman Çizelgesi</h3>
         <ul id="timelineList"></ul>
       </div>
-      <!-- Fotoğraf Galerisi -->
+      <!-- Fotoğraf Galerisi (Sabit Resim) -->
       <div id="gallerySection" class="feature-section">
         <h3>Fotoğraf Galerisi</h3>
         <div id="galleryContainer">
-          <img id="galleryImage" src="https://picsum.photos/seed/1/600/400" alt="Fotoğraf">
-        </div>
-        <div id="galleryEditSection">
-          <input type="text" id="newGalleryImageInput" placeholder="Yeni fotoğraf URL'si">
-          <button id="addGalleryImageBtn">Fotoğraf Ekle</button>
+          <img src="https://r.resimlink.com/W-nJNZV24.jpg" alt="Fotoğraf">
         </div>
       </div>
-      <!-- Kişisel Aşk Notu Bölümü -->
+      <!-- Aşk Notu Bölümü -->
       <div id="loveNotesSection" class="feature-section">
-        <h3>Kişisel Aşk Notu Bölümü</h3>
+        <h3>Aşk Notu</h3>
         <textarea id="loveNoteInput" placeholder="Aşk notunu buraya yaz..."></textarea>
-        <button id="addNoteBtn">Not Ekle</button>
+        <button id="saveNoteBtn">Kaydet</button>
         <ul id="notesList"></ul>
       </div>
       <!-- Sevgi Termometresi -->
@@ -638,34 +618,7 @@
     }
     renderTimeline();
     
-    /********** FOTOĞRAF GALERİSİ (Firebase ile) **********/
-    let galleryImages = [];
-    let currentGalleryIndex = 0;
-    db.ref('galleryImages').on('value', (snapshot) => {
-      const data = snapshot.val();
-      galleryImages = data ? Object.values(data) : [];
-    });
-    function updateGallery() {
-      const galleryImage = document.getElementById('galleryImage');
-      if (galleryImages.length > 0) {
-        galleryImage.src = galleryImages[currentGalleryIndex % galleryImages.length];
-        currentGalleryIndex++;
-      }
-    }
-    updateGallery();
-    setInterval(updateGallery, 3000);
-    
-    // Yeni fotoğraf URL'si ekleme
-    document.getElementById('addGalleryImageBtn').addEventListener('click', () => {
-      const input = document.getElementById('newGalleryImageInput');
-      const url = input.value.trim();
-      if (url) {
-        db.ref('galleryImages').push(url);
-        input.value = '';
-      }
-    });
-    
-    /********** KİŞİSEL AŞK NOTU BÖLÜMÜ (Firebase ile) **********/
+    /********** AŞK NOTU (Firebase ile) **********/
     function renderNotes() {
       const notesList = document.getElementById('notesList');
       db.ref('loveNotes').on('value', (snapshot) => {
@@ -686,7 +639,7 @@
       });
     }
     renderNotes();
-    document.getElementById('addNoteBtn').addEventListener('click', () => {
+    document.getElementById('saveNoteBtn').addEventListener('click', () => {
       const noteInput = document.getElementById('loveNoteInput');
       const note = noteInput.value.trim();
       if (note) {
