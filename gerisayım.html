@@ -88,6 +88,12 @@
       font-size: 0.5em;
       margin-top: 10px;
     }
+    /* Sınav detaylarının gösterileceği alan */
+    #eventDetails {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #1d2b64;
+    }
     footer {
       margin-top: 30px;
       font-size: 1em;
@@ -114,8 +120,10 @@
     <div id="countdownDisplay" class="countdown-display">
       <!-- Sayaç daireleri burada gösterilecek -->
     </div>
+    <!-- Sınavın tarih ve saat bilgisinin gösterileceği alan -->
+    <div id="eventDetails"></div>
     <footer>
-      <p>Hedeflerine ulaşmak için zamanı iyi kullan!</p>
+      <p>Yaşa, var ol Harbiye!</p>
     </footer>
   </div>
   
@@ -134,6 +142,16 @@
       const now = new Date().getTime();
       const distance = events[activeEvent] - now;
       const displayDiv = document.getElementById("countdownDisplay");
+      
+      // Sınavın tam tarih ve saat bilgisini formatlayarak alalım.
+      const examDate = new Date(events[activeEvent]);
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+      const timeOptions = { hour: '2-digit', minute: '2-digit' };
+      const dateStr = examDate.toLocaleDateString('tr-TR', dateOptions);
+      const timeStr = examDate.toLocaleTimeString('tr-TR', timeOptions);
+      
+      // Sınav tarih ve saat bilgisini güncelleyelim.
+      document.getElementById("eventDetails").innerHTML = `<p>Sınav Tarihi: ${dateStr} - ${timeStr}</p>`;
       
       if (distance < 0) {
         displayDiv.innerHTML = "<p>Süre doldu!</p>";
