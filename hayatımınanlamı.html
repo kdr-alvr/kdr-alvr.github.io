@@ -10,7 +10,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <style>
-    /* Genel kutu modeli ve metin seçiminin devre dışı bırakılması */
+    /* Genel ayarlar */
     * {
       box-sizing: border-box;
       -webkit-user-select: none;
@@ -18,7 +18,12 @@
       -ms-user-select: none;
       user-select: none;
     }
-    /* Dinamik arka plan için animasyonlu gradient */
+    button {
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      user-select: none;
+    }
+    /* Arka plan */
     body {
       margin: 0;
       padding: 0;
@@ -42,7 +47,7 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    /* Arka plan için düşen kalpler */
+    /* Düşen kalpler */
     .floating-hearts {
       position: absolute;
       top: 0;
@@ -60,17 +65,11 @@
       animation: fall 6s linear forwards;
     }
     @keyframes fall {
-      0% {
-        transform: translateY(-20px) scale(0.8);
-        opacity: 0;
-      }
+      0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
       20% { opacity: 0.9; }
-      100% {
-        transform: translateY(110vh) scale(1.2);
-        opacity: 0;
-      }
+      100% { transform: translateY(110vh) scale(1.2); opacity: 0; }
     }
-    /* Arka plan için düşen kar taneleri */
+    /* Düşen kar taneleri */
     .floating-snow {
       position: absolute;
       top: 0;
@@ -88,17 +87,11 @@
       animation: fallSnow 8s linear forwards;
     }
     @keyframes fallSnow {
-      0% {
-        transform: translateY(-20px) scale(0.8);
-        opacity: 0;
-      }
+      0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
       20% { opacity: 0.8; }
-      100% {
-        transform: translateY(110vh) scale(1.2);
-        opacity: 0;
-      }
+      100% { transform: translateY(110vh) scale(1.2); opacity: 0; }
     }
-    /* Ana içerik kutusu */
+    /* Container */
     .container {
       position: relative;
       z-index: 2;
@@ -144,40 +137,23 @@
       transition: transform 0.3s;
       cursor: pointer;
     }
-    .time div:hover {
-      transform: scale(1.05);
-    }
+    .time div:hover { transform: scale(1.05); }
     .time div h2 {
       margin: 0;
       font-size: 2.5rem;
       min-width: 60px;
       font-family: 'Roboto Mono', monospace;
     }
-    .time div p {
-      margin: 5px 0 0;
-      font-size: 1rem;
-    }
+    .time div p { margin: 5px 0 0; font-size: 1rem; }
     @media (max-width: 600px) {
       .container h1 { font-size: 2rem; }
       .time { min-height: auto; }
-      .time div {
-        flex: 1 1 70px;
-        margin: 5px;
-        padding: 10px;
-      }
-      .time div h2 { 
-        font-size: 1.5rem; 
-        min-width: 40px;
-      }
-      .time div p { 
-        font-size: 0.8rem; 
-      }
+      .time div { flex: 1 1 70px; margin: 5px; padding: 10px; }
+      .time div h2 { font-size: 1.5rem; min-width: 40px; }
+      .time div p { font-size: 0.8rem; }
     }
-    /* Sürpriz butonu */
-    #instruction {
-      margin: 10px 0;
-      font-size: 1.2rem;
-    }
+    /* Sürpriz (kalp) butonu */
+    #instruction { margin: 10px 0; font-size: 1.2rem; }
     #surpriseBtn {
       background: #ff4b5c;
       border: none;
@@ -191,9 +167,21 @@
       position: relative;
       overflow: visible;
     }
-    #surpriseBtn:hover {
-      background: #e63946;
+    #surpriseBtn:hover { background: #e63946; }
+    /* Mute/Unmute butonu */
+    #muteBtn {
+      background: #ff4b5c;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.5rem;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-left: 20px;
+      outline: none;
     }
+    #muteBtn:hover { background: #e63946; }
     /* Romantik mesaj kutusu */
     #surpriseMessage {
       margin-top: 20px;
@@ -212,9 +200,7 @@
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .pulse {
-      animation: pulseAnimation 0.5s;
-    }
+    .pulse { animation: pulseAnimation 0.5s; }
     @keyframes pulseAnimation {
       0% { transform: scale(1); }
       50% { transform: scale(1.1); }
@@ -229,25 +215,18 @@
       z-index: 3;
     }
     @keyframes clickHeartAnim {
-      0% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(2) translateY(-150px);
-      }
+      0% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(2) translateY(-150px); }
     }
-    /* Ek Özellikler alanı (başlık kaldırıldı) */
+    /* Ek Özellikler alanı (çerçeve kaldırıldı) */
     #extraFeatures {
       margin-top: 30px;
       text-align: left;
       background: rgba(255,255,255,0.2);
       padding: 20px;
       border-radius: 10px;
-      border: 3px solid rgba(0,0,0,0.5);
     }
-    /* Timeline, Fotoğraf Galerisi ve Aşk Notu gibi alt bölümlerin başlıkları */
+    /* Alt bölümlerin başlıkları */
     .feature-section h3 {
       font-family: 'Dancing Script', cursive;
       font-size: 1.8rem;
@@ -255,14 +234,8 @@
       border-bottom: 1px solid rgba(255,255,255,0.5);
       padding-bottom: 5px;
     }
-    #dailyMessage {
-      font-size: 1.4rem;
-      font-family: 'Dancing Script', cursive;
-    }
-    #timelineList {
-      list-style: none;
-      padding-left: 0;
-    }
+    #dailyMessage { font-size: 1.4rem; font-family: 'Dancing Script', cursive; }
+    #timelineList { list-style: none; padding-left: 0; }
     #timelineList li {
       margin-bottom: 8px;
       border-left: 2px solid #fff;
@@ -340,8 +313,8 @@
   </style>
 </head>
 <body>
-  <!-- Arka plan müziği -->
-  <audio id="bgMusic" src="romantic.mp3" loop autoplay></audio>
+  <!-- Arka plan müziği: Google Drive'dan (doğrudan indirme linki) -->
+  <audio id="bgMusic" src="https://drive.google.com/uc?export=download&id=1GugEsvydsMWATt5bs29GEjMR2dbgaIbh" loop autoplay></audio>
   <!-- Tıklama sesi -->
   <audio id="clickSound" src="click.mp3"></audio>
   
@@ -376,9 +349,10 @@
     </div>
     <p id="instruction">Tıkla</p>
     <button id="surpriseBtn">❤️</button>
+    <button id="muteBtn">🔊</button>
     <div id="surpriseMessage"></div>
     
-    <!-- Ek Özellikler Alanı (Başlık kaldırıldı) -->
+    <!-- Ek Özellikler Alanı (çerçeve kaldırıldı) -->
     <div id="extraFeatures">
       <!-- Günün Romantik Mesajı -->
       <div id="dailyMessageSection" class="feature-section">
@@ -570,7 +544,6 @@
       setTimeout(spawnFallingHeart, Math.random() * 2000 + 1000);
     }
     spawnFallingHeart();
-    
     function spawnFallingSnow() {
       const snow = document.createElement('div');
       snow.classList.add('falling-snow');
@@ -652,6 +625,18 @@
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
     document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
+    
+    // Mute / Unmute butonu
+    document.getElementById('muteBtn').addEventListener('click', function() {
+      const bgMusic = document.getElementById('bgMusic');
+      if(bgMusic.muted) {
+        bgMusic.muted = false;
+        this.textContent = '🔊';
+      } else {
+        bgMusic.muted = true;
+        this.textContent = '🔇';
+      }
+    });
     
     // İlk etkileşimde müziği başlat
     window.addEventListener('click', () => {
