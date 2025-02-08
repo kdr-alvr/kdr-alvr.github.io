@@ -6,6 +6,9 @@
   <title>Seni Seviyorum Melike - Kaç Aydır Sevgiliyiz?</title>
   <!-- Google Fonts: Roboto, Roboto Mono, Dancing Script -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <!-- Firebase (compat sürümünü kullanıyoruz) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <style>
     /* Tüm metin seçimini devre dışı bırak */
     * {
@@ -28,8 +31,10 @@
       min-height: 100vh;
       color: #fff;
       position: relative;
-      overflow: hidden;
+      /* İçerik uzun olduğunda kaydırma sağlamak için: */
+      overflow-y: auto;
       transition: background 0.5s;
+      padding: 20px;
     }
     /* Alternatif tema (örneğin, farklı renk paleti) */
     body.alt-theme {
@@ -79,7 +84,7 @@
       text-align: center;
       max-width: 600px;
       width: 90%;
-      margin: 20px;
+      margin: 20px auto;
     }
     .container h1 {
       margin-bottom: 20px;
@@ -264,6 +269,7 @@
       height: 100%;
       object-fit: cover;
     }
+    /* Kişisel Aşk Notu Bölümü */
     #loveNotesSection textarea {
       width: 100%;
       height: 80px;
@@ -298,7 +304,11 @@
       margin-bottom: 5px;
       font-family: 'Dancing Script', cursive;
       font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+    /* Tema Değiştir */
     #themeSection button {
       background: #ff4b5c;
       border: none;
@@ -308,6 +318,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    /* Sevgi Termometresi */
     #loveMeterContainer {
       width: 100%;
       height: 20px;
@@ -320,6 +331,27 @@
       height: 100%;
       background: #ff4b5c;
       transition: width 0.5s;
+    }
+    /* Ek: Fotoğraf Düzenleme Bölümü */
+    #galleryEditSection {
+      margin-top: 15px;
+      text-align: center;
+    }
+    #galleryEditSection input {
+      padding: 5px;
+      width: 70%;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 5px;
+    }
+    #galleryEditSection button {
+      background: #ff4b5c;
+      border: none;
+      padding: 5px 10px;
+      font-size: 1rem;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -377,7 +409,12 @@
       <div id="gallerySection" class="feature-section">
         <h3>Fotoğraf Galerisi</h3>
         <div id="galleryContainer">
-          <img id="galleryImage" src="" alt="Fotoğraf">
+          <img id="galleryImage" src="https://picsum.photos/seed/1/600/400" alt="Fotoğraf">
+        </div>
+        <!-- Fotoğraf düzenleme bölümü -->
+        <div id="galleryEditSection">
+          <input type="text" id="newGalleryImageInput" placeholder="Yeni fotoğraf URL'si">
+          <button id="addGalleryImageBtn">Fotoğraf Ekle</button>
         </div>
       </div>
       <!-- Kişisel Aşk Notu Bölümü -->
@@ -403,6 +440,23 @@
   </div>
   
   <script>
+    /***** Firebase Konfigürasyonu *****
+      Aşağıdaki firebaseConfig nesnesini kendi Firebase projenizden aldığınız değerlerle
+      güncelleyin. Firebase konsolunda Realtime Database’i oluşturduktan sonra,
+      test aşaması için veritabanı kurallarını "read" ve "write" için herkese açık yapın.
+    ************************************/
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
     /* Zaman hesaplama */
     function updateTimer() {
       const start = new Date(2024, 4, 7, 23, 37, 0);
@@ -570,30 +624,53 @@
     }
     renderTimeline();
     
-    // Fotoğraf Galerisi
-    const galleryImages = [
-      'https://picsum.photos/seed/1/600/400',
-      'https://picsum.photos/seed/2/600/400',
-      'https://picsum.photos/seed/3/600/400'
-    ];
+    /********** FOTOĞRAF GALERİSİ (Firebase ile) **********/
+    let galleryImages = [];
     let currentGalleryIndex = 0;
+    // Firebase'den galerideki resimleri oku:
+    db.ref('galleryImages').on('value', (snapshot) => {
+      const data = snapshot.val();
+      galleryImages = data ? Object.values(data) : [];
+    });
     function updateGallery() {
       const galleryImage = document.getElementById('galleryImage');
-      galleryImage.src = galleryImages[currentGalleryIndex];
-      currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
+      if (galleryImages.length > 0) {
+        galleryImage.src = galleryImages[currentGalleryIndex % galleryImages.length];
+        currentGalleryIndex++;
+      }
     }
     updateGallery();
     setInterval(updateGallery, 3000);
     
-    // Kişisel Aşk Notu Bölümü
-    const loveNotes = JSON.parse(localStorage.getItem('loveNotes')) || [];
+    // Yeni fotoğraf URL'si ekleme
+    document.getElementById('addGalleryImageBtn').addEventListener('click', () => {
+      const input = document.getElementById('newGalleryImageInput');
+      const url = input.value.trim();
+      if (url) {
+        db.ref('galleryImages').push(url);
+        input.value = '';
+      }
+    });
+    
+    /********** KİŞİSEL AŞK NOTU BÖLÜMÜ (Firebase ile) **********/
     function renderNotes() {
       const notesList = document.getElementById('notesList');
-      notesList.innerHTML = '';
-      loveNotes.forEach(note => {
-        const li = document.createElement('li');
-        li.textContent = note;
-        notesList.appendChild(li);
+      db.ref('loveNotes').on('value', (snapshot) => {
+        const notes = snapshot.val();
+        notesList.innerHTML = '';
+        for (let key in notes) {
+          const li = document.createElement('li');
+          li.textContent = notes[key];
+          // Silme butonu ekleyelim:
+          const delBtn = document.createElement('button');
+          delBtn.textContent = 'Sil';
+          delBtn.style.marginLeft = '10px';
+          delBtn.onclick = () => {
+            db.ref('loveNotes/' + key).remove();
+          };
+          li.appendChild(delBtn);
+          notesList.appendChild(li);
+        }
       });
     }
     renderNotes();
@@ -601,10 +678,8 @@
       const noteInput = document.getElementById('loveNoteInput');
       const note = noteInput.value.trim();
       if (note) {
-        loveNotes.push(note);
-        localStorage.setItem('loveNotes', JSON.stringify(loveNotes));
+        db.ref('loveNotes').push(note);
         noteInput.value = '';
-        renderNotes();
       }
     });
     
@@ -614,11 +689,11 @@
     });
     
     // Sevgi Termometresi
-    let loveMeterValue = parseInt(localStorage.getItem('loveMeterValue')) || 0;
+    let loveMeterValue = 0; // Global olarak tutuyoruz (Firebase de ekleyip çekmek de mümkün)
     function incrementLoveMeter() {
       loveMeterValue = Math.min(loveMeterValue + 10, 100);
-      localStorage.setItem('loveMeterValue', loveMeterValue);
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
+      // Eğer isterseniz bu değeri Firebase'e de kaydedebilirsiniz
     }
     document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     
