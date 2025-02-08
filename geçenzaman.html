@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Geçen Süre Sayacı</title>
-  <!-- Google Fonts ile güzel bir yazı tipi ekledik -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Seni Seviyorum Melike - Kaç Aydır Sevgiliyiz?</title>
+  <!-- Google Fonts: Roboto, Roboto Mono, Dancing Script -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
     /* Genel stil */
     body {
       margin: 0;
       padding: 0;
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, #ffafbd, #ffc3a0);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -21,95 +21,162 @@
     }
     /* İçerik kutusu */
     .container {
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.3);
       padding: 40px;
-      border-radius: 10px;
+      border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       text-align: center;
+      max-width: 600px;
     }
     .container h1 {
       margin-bottom: 20px;
-      font-size: 2rem;
+      font-size: 2.5rem;
+      font-family: 'Dancing Script', cursive;
+      position: relative;
+    }
+    /* Kalp animasyonu */
+    .heart {
+      display: inline-block;
+      color: #ff4b5c;
+      animation: beat 1s infinite;
+    }
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
     }
     /* Zaman dilimlerinin kutuları */
     .time {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
+      margin-bottom: 20px;
+      min-height: 200px; /* Sabit yükseklik: reflow sorununu engellemek için */
     }
     .time div {
       flex: 1 1 100px;
       margin: 10px;
       background: rgba(255,255,255,0.2);
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 10px;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .time div:hover {
+      transform: scale(1.05);
     }
     .time div h2 {
       margin: 0;
       font-size: 2.5rem;
+      min-width: 60px; /* Sabit genişlik: sayı değişimlerinde yer kaymasını engeller */
+      font-family: 'Roboto Mono', monospace;
     }
     .time div p {
       margin: 5px 0 0;
       font-size: 1rem;
     }
     @media (max-width: 600px) {
-      .container h1 { font-size: 1.5rem; }
+      .container h1 { font-size: 2rem; }
       .time div h2 { font-size: 2rem; }
       .time div p { font-size: 0.9rem; }
+    }
+    /* Sürpriz butonu ve üzerindeki açıklama */
+    #instruction {
+      margin: 10px 0;
+      font-size: 1.2rem;
+    }
+    #surpriseBtn {
+      background: #ff4b5c;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+    #surpriseBtn:hover {
+      background: #e63946;
+    }
+    /* Sürpriz mesajı */
+    #surpriseMessage {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.8);
+      color: #333;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      display: none;
+      animation: fadeIn 0.5s forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Pulse animasyon: Zaman kutularına tıklanınca */
+    .pulse {
+      animation: pulseAnimation 0.5s;
+    }
+    @keyframes pulseAnimation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Seni Seviyorum Melike <3</h1>
+    <h1>Seni Seviyorum <span class="heart">&hearts;</span> Melike</h1>
     <div class="time">
-      <div>
+      <div id="timeMonths">
         <h2 id="months">0</h2>
         <p>Ay</p>
       </div>
-      <div>
+      <div id="timeDays">
         <h2 id="days">0</h2>
         <p>Gün</p>
       </div>
-      <div>
+      <div id="timeHours">
         <h2 id="hours">0</h2>
         <p>Saat</p>
       </div>
-      <div>
+      <div id="timeMinutes">
         <h2 id="minutes">0</h2>
         <p>Dakika</p>
       </div>
-      <div>
+      <div id="timeSeconds">
         <h2 id="seconds">0</h2>
         <p>Saniye</p>
       </div>
     </div>
+    <!-- Sürpriz butonunun üstünde "Tıkla" yazısı -->
+    <p id="instruction">Tıkla</p>
+    <button id="surpriseBtn">Sürprizlere Bak!</button>
+    <div id="surpriseMessage"></div>
   </div>
   
   <script>
+    // Geçen süreyi hesaplayan fonksiyon
     function updateTimer() {
       // Başlangıç tarihi: 7 Mayıs 2024, 23:37
       const start = new Date(2024, 4, 7, 23, 37, 0);
       const now = new Date();
       
-      /* 
-         Önce tam geçen ay sayısını hesaplıyoruz.
-         (Yıl farkı * 12) + ay farkı veriyor.
-      */
+      // Toplam geçen ay sayısını hesaplıyoruz.
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
       
-      // Başlangıç tarihine tam geçen ay sayısını ekleyerek "aylık yıl dönümü" hesaplıyoruz.
+      // "Aylık yıl dönümü" hesaplaması:
       let anniversary = new Date(start);
       anniversary.setMonth(start.getMonth() + totalMonths);
       
-      // Eğer yıl dönümü (ay eklemesiyle oluşan tarih) 'now'dan sonra ise, henüz tam bir ay geçmemiş demektir.
+      // Eğer "aylık yıl dönümü" bugünden sonra ise, tam bir ay geçmemiş demektir.
       if (anniversary > now) {
         totalMonths--;
         anniversary = new Date(start);
         anniversary.setMonth(start.getMonth() + totalMonths);
       }
       
-      // Kalan zamanı (gün, saat, dakika, saniye) hesaplıyoruz.
+      // Geçen gün, saat, dakika, saniyeyi hesaplıyoruz.
       let diff = now - anniversary;
       const msInDay = 1000 * 60 * 60 * 24;
       const msInHour = 1000 * 60 * 60;
@@ -126,7 +193,7 @@
       
       const remainingSeconds = Math.floor(diff / 1000);
       
-      // Sonuçları sayfadaki ilgili elementlere yazdırıyoruz.
+      // Hesaplanan değerleri ilgili elementlere yazdırıyoruz.
       document.getElementById('months').textContent = totalMonths;
       document.getElementById('days').textContent = remainingDays;
       document.getElementById('hours').textContent = remainingHours;
@@ -134,9 +201,91 @@
       document.getElementById('seconds').textContent = remainingSeconds;
     }
     
-    // Sayfa yüklendiğinde ve her saniye güncellemek için
+    // Sayfa yüklendiğinde ve her saniye zamanlayıcıyı güncelle
     updateTimer();
     setInterval(updateTimer, 1000);
+    
+    // Zaman kutularına tıklanınca kısa pulse animasyonu ekle
+    document.querySelectorAll('.time div').forEach(div => {
+      div.addEventListener('click', () => {
+        div.classList.add('pulse');
+        setTimeout(() => {
+          div.classList.remove('pulse');
+        }, 500);
+      });
+    });
+    
+    // 50 adet romantik sürpriz mesajı
+    const loveMessages = [
+      "Sen benim en değerlimsin, hayatımın anlamı!",
+      "Her anı seninle yaşamak, en güzel hayalim.",
+      "Gülüşün dünyamı aydınlatıyor, seni çok seviyorum.",
+      "Beraber geçirdiğimiz her saniye, bir ömür boyu mutluluk demek.",
+      "Kalbim her atışında adını fısıldıyor, aşkımız sonsuza dek sürecek!",
+      "Seninle her gün yeniden aşık oluyorum.",
+      "Seni düşündüğümde yüzümde kocaman bir gülümseme beliriyor.",
+      "Aşkımız, en güzel masalın gerçek hali.",
+      "Gözlerin, ruhumun derinliklerine dokunan en parlak ışıktır.",
+      "Seninle geçirdiğim zaman, hayatımın en değerli anlarıdır.",
+      "Sana olan sevgim, kelimelerle tarif edilemeyecek kadar büyük.",
+      "Sen hayatımın en tatlı rüyası oldun.",
+      "Her sabah seninle uyanmak, dünyanın en güzel mucizesi.",
+      "Aşkımız, zamanın ötesinde bir öykü.",
+      "Senin varlığın, hayatımı renklendiriyor.",
+      "Seni sevmek, en doğru seçimim oldu.",
+      "Kalbim sadece senin için atıyor.",
+      "Seninle her şey daha anlamlı, daha güzel.",
+      "Ruhum, seninle tamamlanıyor.",
+      "Seni sevmek, hayatıma kattığım en değerli armağan.",
+      "Aşkımız, sonsuz bir melodidir.",
+      "Seninle geçen her an, ömrümün en güzel şarkısı.",
+      "Sen benim güneşimsin, her karanlıkta yolumu aydınlatan.",
+      "Gözlerinle konuşan bir dil var, o dilde ben hep seninle.",
+      "Seni düşündüğümde kalbim hızla çarpıyor.",
+      "Sonsuzluk bile senin sevgimizin karşısında küçücük kalır.",
+      "Sen benim hayatımın en özel parçasısın.",
+      "Her adımımda, seninle olmak en büyük mutluluk.",
+      "Seni sevmek, en doğal his, en saf duygu.",
+      "Kalbimin en derin köşesinde sadece senin için bir yer var.",
+      "Sonsuza dek seninle olmak, en büyük hayalim.",
+      "Seninle her an, bir ömre bedel.",
+      "Aşkımız, yıldızlar kadar parlak, ay kadar huzurlu.",
+      "Sen benim en güzel tesadüfümsün.",
+      "Her nefeste, senin aşkınla doluyum.",
+      "Gülüşün, karanlık günlerimin ışığı.",
+      "Sen benim kalbimin en güzel melodisisin.",
+      "Seni sevmek, hayatımın en doğru kararı.",
+      "Seninle her şey mümkün, her hayal gerçeğe dönüşüyor.",
+      "Aşkımız, sonsuzluğa uzanan bir masal.",
+      "Kalbim, seninle atmayı öğrendi.",
+      "Senin varlığın, dünyamı güzelleştiriyor.",
+      "Seninle her an, en özel anıları yaratıyorum.",
+      "Seni sevmek, en derin duyguların ötesinde bir his.",
+      "Sen benim ruhumun en güzel aynasısın.",
+      "Aşkın, hayatımın en renkli tablosu.",
+      "Seninle olmak, hayatın en güzel hediyesi.",
+      "Kalbim, seninle daha anlamlı, daha sıcak.",
+      "Seni sevmek, en büyülü rüya gibi.",
+      "Sen, hayatımın en parlak yıldızısın."
+    ];
+    
+    // Sürpriz butonu işlevi: Rastgele mesaj göster
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    const surpriseMessageDiv = document.getElementById('surpriseMessage');
+    
+    surpriseBtn.addEventListener('click', () => {
+      // Rastgele bir mesaj seç
+      const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+      surpriseMessageDiv.textContent = randomMessage;
+      
+      // Mesajı görünür yap (fadeIn animasyonu çalışır)
+      surpriseMessageDiv.style.display = 'block';
+      
+      // 5 saniye sonra otomatik olarak mesajı gizle
+      setTimeout(() => {
+        surpriseMessageDiv.style.display = 'none';
+      }, 5000);
+    });
   </script>
 </body>
 </html>
