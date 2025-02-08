@@ -7,20 +7,59 @@
   <!-- Google Fonts: Roboto, Roboto Mono, Dancing Script -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Genel stil */
+    /* Dinamik arka plan için animasyonlu gradient (10s döngü, daha yoğun) */
     body {
       margin: 0;
       padding: 0;
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+      background: linear-gradient(-45deg, #ffafbd, #ffc3a0, #ffafbd, #ffc3a0);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Arka plan için düşen kalpler */
+    .floating-hearts {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .falling-heart {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.5rem;
+      animation: fall 6s linear forwards;
+    }
+    @keyframes fall {
+      0% {
+        transform: translateY(-20px) scale(0.8);
+        opacity: 0;
+      }
+      20% { opacity: 0.9; }
+      100% {
+        transform: translateY(110vh) scale(1.2);
+        opacity: 0;
+      }
     }
     /* İçerik kutusu */
     .container {
+      position: relative;
+      z-index: 2;
       background: rgba(0, 0, 0, 0.3);
       padding: 40px;
       border-radius: 15px;
@@ -34,7 +73,7 @@
       font-family: 'Dancing Script', cursive;
       position: relative;
     }
-    /* Kalp animasyonu */
+    /* Başlıktaki kalp animasyonu */
     .heart {
       display: inline-block;
       color: #ff4b5c;
@@ -50,7 +89,7 @@
       justify-content: space-around;
       flex-wrap: wrap;
       margin-bottom: 20px;
-      min-height: 200px; /* Sabit yükseklik: reflow sorununu engellemek için */
+      min-height: 200px; /* Reflow sorununu engellemek için */
     }
     .time div {
       flex: 1 1 100px;
@@ -67,7 +106,7 @@
     .time div h2 {
       margin: 0;
       font-size: 2.5rem;
-      min-width: 60px; /* Sabit genişlik: sayı değişimlerinde yer kaymasını engeller */
+      min-width: 60px; /* Sayıların değişiminde yer kaymasını engeller */
       font-family: 'Roboto Mono', monospace;
     }
     .time div p {
@@ -79,26 +118,29 @@
       .time div h2 { font-size: 2rem; }
       .time div p { font-size: 0.9rem; }
     }
-    /* Sürpriz butonu ve üzerindeki açıklama */
+    /* Sürpriz butonu ve açıklama */
     #instruction {
       margin: 10px 0;
       font-size: 1.2rem;
     }
+    /* Buton artık sadece kalp emojisi içeriyor */
     #surpriseBtn {
       background: #ff4b5c;
       border: none;
       padding: 10px 20px;
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       color: #fff;
       border-radius: 25px;
       cursor: pointer;
       transition: background 0.3s;
       margin-top: 10px;
+      position: relative;
+      overflow: visible;
     }
     #surpriseBtn:hover {
       background: #e63946;
     }
-    /* Sürpriz mesajı */
+    /* Sürpriz mesajı: Artık butona tekrar basılana kadar ekranda kalıyor */
     #surpriseMessage {
       margin-top: 20px;
       padding: 15px;
@@ -122,9 +164,34 @@
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
+    /* Butona basıldığında ekranın üstüne doğru süzülen kalp */
+    .click-heart {
+      position: fixed;
+      color: #ff4b5c;
+      font-size: 1.8rem;
+      pointer-events: none;
+      animation: clickHeartAnim 1.5s ease-out forwards;
+      z-index: 3;
+    }
+    @keyframes clickHeartAnim {
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(2) translateY(-150px);
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Arka plan müzik öğesi (dosya yolunu kendinize göre ayarlayın) -->
+  <audio id="bgMusic" src="romantic.mp3" loop autoplay></audio>
+  
+  <!-- Floating hearts arka plan container'ı -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+  
   <div class="container">
     <h1>Seni Seviyorum <span class="heart">&hearts;</span> Melike</h1>
     <div class="time">
@@ -149,14 +216,15 @@
         <p>Saniye</p>
       </div>
     </div>
-    <!-- Sürpriz butonunun üstünde "Tıkla" yazısı -->
+    <!-- Butonun üstünde gösterilecek açıklama (isteğe bağlı) -->
     <p id="instruction">Tıkla</p>
-    <button id="surpriseBtn">Sürprizlere Bak!</button>
+    <!-- Buton yazısı kalp emojisi -->
+    <button id="surpriseBtn">❤️</button>
     <div id="surpriseMessage"></div>
   </div>
   
   <script>
-    // Geçen süreyi hesaplayan fonksiyon
+    /* Zaman hesaplama */
     function updateTimer() {
       // Başlangıç tarihi: 7 Mayıs 2024, 23:37
       const start = new Date(2024, 4, 7, 23, 37, 0);
@@ -201,17 +269,18 @@
       document.getElementById('seconds').textContent = remainingSeconds;
     }
     
-    // Sayfa yüklendiğinde ve her saniye zamanlayıcıyı güncelle
     updateTimer();
     setInterval(updateTimer, 1000);
     
-    // Zaman kutularına tıklanınca kısa pulse animasyonu ekle
+    // Zaman kutuları için tıklama/dokunma olayları: pulse animasyonu
     document.querySelectorAll('.time div').forEach(div => {
-      div.addEventListener('click', () => {
-        div.classList.add('pulse');
-        setTimeout(() => {
-          div.classList.remove('pulse');
-        }, 500);
+      ['click', 'touchstart'].forEach(evt => {
+        div.addEventListener(evt, () => {
+          div.classList.add('pulse');
+          setTimeout(() => {
+            div.classList.remove('pulse');
+          }, 500);
+        });
       });
     });
     
@@ -269,22 +338,64 @@
       "Sen, hayatımın en parlak yıldızısın."
     ];
     
-    // Sürpriz butonu işlevi: Rastgele mesaj göster
+    // Butona basıldığında ekranda yukarı doğru süzülen kalp animasyonu oluşturma
+    function spawnClickHeart(button) {
+      const heart = document.createElement('div');
+      heart.classList.add('click-heart');
+      heart.textContent = '♥';
+      // Butonun merkezinin konumunu alalım (viewport koordinatları)
+      const rect = button.getBoundingClientRect();
+      heart.style.left = (rect.left + rect.width / 2 - 10) + 'px';
+      heart.style.top = (rect.top + rect.height / 2 - 10) + 'px';
+      document.body.appendChild(heart);
+      
+      // Animasyon tamamlandıktan sonra elemanı kaldıralım
+      setTimeout(() => {
+        heart.remove();
+      }, 1500);
+    }
+    
+    // Sürpriz butonu işlevi: Rastgele mesaj göster (mesaj ekranda kalacak)
     const surpriseBtn = document.getElementById('surpriseBtn');
     const surpriseMessageDiv = document.getElementById('surpriseMessage');
     
-    surpriseBtn.addEventListener('click', () => {
-      // Rastgele bir mesaj seç
-      const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
-      surpriseMessageDiv.textContent = randomMessage;
-      
-      // Mesajı görünür yap (fadeIn animasyonu çalışır)
-      surpriseMessageDiv.style.display = 'block';
-      
-      // 5 saniye sonra otomatik olarak mesajı gizle
+    ['click', 'touchstart'].forEach(evt => {
+      surpriseBtn.addEventListener(evt, (e) => {
+        // Butona basıldığında ekranın üstüne doğru süzülen kalp animasyonu oluştur
+        spawnClickHeart(surpriseBtn);
+        
+        // Rastgele bir mesaj seç ve göster (önceki mesaj kaybolmuyor, üzerine yazılıyor)
+        const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+        surpriseMessageDiv.textContent = randomMessage;
+        surpriseMessageDiv.style.display = 'block';
+      });
+    });
+    
+    // Arka planda düşen kalpler: Daha sık ve yoğun olması için, kendini çağıran fonksiyon
+    function spawnFallingHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('falling-heart');
+      heart.textContent = '♥';
+      // Rastgele sol konum (%)
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
+      heart.style.opacity = 0.8;
+      document.getElementById('floatingHearts').appendChild(heart);
       setTimeout(() => {
-        surpriseMessageDiv.style.display = 'none';
-      }, 5000);
+        heart.remove();
+      }, 6000);
+      // Bir sonraki kalp için rastgele süre (1 - 3 saniye)
+      setTimeout(spawnFallingHeart, Math.random() * 2000 + 1000);
+    }
+    // İlk düşen kalbi başlat
+    spawnFallingHeart();
+    
+    // (Opsiyonel) İlk etkileşimde müziği başlatmak için:
+    window.addEventListener('click', () => {
+      const bgMusic = document.getElementById('bgMusic');
+      if (bgMusic.paused) {
+        bgMusic.play();
+      }
     });
   </script>
 </body>
