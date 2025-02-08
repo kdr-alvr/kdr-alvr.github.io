@@ -7,6 +7,13 @@
   <!-- Google Fonts: Roboto, Roboto Mono, Dancing Script -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
+    /* Tüm metinlerin seçilmesini devre dışı bırak */
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
     /* Dinamik arka plan için animasyonlu gradient (10s döngü, daha yoğun) */
     body {
       margin: 0;
@@ -113,15 +120,14 @@
       margin: 5px 0 0;
       font-size: 1rem;
     }
-    /* Mobil görünüm için düzenleme */
+    /* Mobil düzen: Zaman karolarını daha küçük ve düzenli hale getirin */
     @media (max-width: 600px) {
       .container h1 { font-size: 2rem; }
       .time {
-        /* min-height kaldırıldı, esnek grid düzeni kullanılıyor */
         min-height: auto;
       }
       .time div {
-        flex: 1 1 70px; /* Daha küçük kareler */
+        flex: 1 1 70px; /* daha küçük karolar */
         margin: 5px;
         padding: 10px;
       }
@@ -155,16 +161,19 @@
     #surpriseBtn:hover {
       background: #e63946;
     }
-    /* Sürpriz mesajı: Artık butona tekrar basılana kadar ekranda kalıyor */
+    /* Sürpriz mesajı: Zarif, zarf benzeri bir görünüm ve romantik yazı tipi */
     #surpriseMessage {
       margin-top: 20px;
-      padding: 15px;
-      background: rgba(255,255,255,0.8);
+      padding: 20px;
+      background: rgba(255,255,255,0.9);
       color: #333;
+      border: 2px solid #fff;
       border-radius: 10px;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      font-family: 'Dancing Script', cursive;
       display: none;
       animation: fadeIn 0.5s forwards;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
@@ -299,6 +308,9 @@
       });
     });
     
+    // Debounce flag for surprise button
+    let surpriseBtnDisabled = false;
+    
     // 50 adet romantik sürpriz mesajı
     const loveMessages = [
       "Sen benim en değerlimsin, hayatımın anlamı!",
@@ -376,10 +388,14 @@
     
     ['click', 'touchstart'].forEach(evt => {
       surpriseBtn.addEventListener(evt, (e) => {
+        if (surpriseBtnDisabled) return; // Buton 1 saniye boyunca devre dışı
+        surpriseBtnDisabled = true;
+        setTimeout(() => { surpriseBtnDisabled = false; }, 1000); // 1 saniyelik debounce
+        
         // Butona basıldığında ekranın üstüne doğru süzülen kalp animasyonu oluştur
         spawnClickHeart(surpriseBtn);
         
-        // Rastgele bir mesaj seç ve göster (önceki mesaj kaybolmuyor, üzerine yazılıyor)
+        // Rastgele bir mesaj seç ve göster (önceki mesaj üzerine yazılıyor)
         const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
         surpriseMessageDiv.textContent = randomMessage;
         surpriseMessageDiv.style.display = 'block';
