@@ -18,7 +18,7 @@
       -ms-user-select: none;
       user-select: none;
     }
-    /* Dinamik arka plan için animasyonlu gradient; dinamik tema updateTheme() ile de değişecek */
+    /* Dinamik arka plan için animasyonlu gradient */
     body {
       margin: 0;
       padding: 0;
@@ -60,9 +60,15 @@
       animation: fall 6s linear forwards;
     }
     @keyframes fall {
-      0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
+      0% {
+        transform: translateY(-20px) scale(0.8);
+        opacity: 0;
+      }
       20% { opacity: 0.9; }
-      100% { transform: translateY(110vh) scale(1.2); opacity: 0; }
+      100% {
+        transform: translateY(110vh) scale(1.2);
+        opacity: 0;
+      }
     }
     /* Arka plan için düşen kar taneleri */
     .floating-snow {
@@ -82,9 +88,15 @@
       animation: fallSnow 8s linear forwards;
     }
     @keyframes fallSnow {
-      0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
+      0% {
+        transform: translateY(-20px) scale(0.8);
+        opacity: 0;
+      }
       20% { opacity: 0.8; }
-      100% { transform: translateY(110vh) scale(1.2); opacity: 0; }
+      100% {
+        transform: translateY(110vh) scale(1.2);
+        opacity: 0;
+      }
     }
     /* Ana içerik kutusu */
     .container {
@@ -105,7 +117,7 @@
       font-family: 'Dancing Script', cursive;
       position: relative;
     }
-    /* Kalp animasyonu (üst başlıktaki kalp) */
+    /* Kalp animasyonu */
     .heart {
       display: inline-block;
       color: #ff4b5c;
@@ -132,7 +144,9 @@
       transition: transform 0.3s;
       cursor: pointer;
     }
-    .time div:hover { transform: scale(1.05); }
+    .time div:hover {
+      transform: scale(1.05);
+    }
     .time div h2 {
       margin: 0;
       font-size: 2.5rem;
@@ -151,11 +165,19 @@
         margin: 5px;
         padding: 10px;
       }
-      .time div h2 { font-size: 1.5rem; min-width: 40px; }
-      .time div p { font-size: 0.8rem; }
+      .time div h2 { 
+        font-size: 1.5rem; 
+        min-width: 40px;
+      }
+      .time div p { 
+        font-size: 0.8rem; 
+      }
     }
     /* Sürpriz butonu */
-    #instruction { margin: 10px 0; font-size: 1.2rem; }
+    #instruction {
+      margin: 10px 0;
+      font-size: 1.2rem;
+    }
     #surpriseBtn {
       background: #ff4b5c;
       border: none;
@@ -169,7 +191,9 @@
       position: relative;
       overflow: visible;
     }
-    #surpriseBtn:hover { background: #e63946; }
+    #surpriseBtn:hover {
+      background: #e63946;
+    }
     /* Romantik mesaj kutusu */
     #surpriseMessage {
       margin-top: 20px;
@@ -188,7 +212,9 @@
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .pulse { animation: pulseAnimation 0.5s; }
+    .pulse {
+      animation: pulseAnimation 0.5s;
+    }
     @keyframes pulseAnimation {
       0% { transform: scale(1); }
       50% { transform: scale(1.1); }
@@ -203,23 +229,25 @@
       z-index: 3;
     }
     @keyframes clickHeartAnim {
-      0% { opacity: 1; transform: scale(1) translateY(0); }
-      100% { opacity: 0; transform: scale(2) translateY(-150px); }
+      0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(2) translateY(-150px);
+      }
     }
-    /* Ek Özellikler Alanı Düzenlemesi:
-       - Başlık kaldırıldı.
-       - Arka plan yarı saydam beyaz,
-       - Çerçeve genişletildi (5px solid black) ve container ile uyumlu hale getirildi.
-    */
+    /* Ek Özellikler alanı (başlık kaldırıldı) */
     #extraFeatures {
       margin-top: 30px;
       text-align: left;
       background: rgba(255,255,255,0.2);
       padding: 20px;
       border-radius: 10px;
-      border: 5px solid black;
+      border: 3px solid rgba(0,0,0,0.5);
     }
-    /* Alt bölümlerin başlıkları */
+    /* Timeline, Fotoğraf Galerisi ve Aşk Notu gibi alt bölümlerin başlıkları */
     .feature-section h3 {
       font-family: 'Dancing Script', cursive;
       font-size: 1.8rem;
@@ -227,8 +255,14 @@
       border-bottom: 1px solid rgba(255,255,255,0.5);
       padding-bottom: 5px;
     }
-    #dailyMessage { font-size: 1.4rem; font-family: 'Dancing Script', cursive; }
-    #timelineList { list-style: none; padding-left: 0; }
+    #dailyMessage {
+      font-size: 1.4rem;
+      font-family: 'Dancing Script', cursive;
+    }
+    #timelineList {
+      list-style: none;
+      padding-left: 0;
+    }
     #timelineList li {
       margin-bottom: 8px;
       border-left: 2px solid #fff;
@@ -250,7 +284,7 @@
       height: 100%;
       object-fit: cover;
     }
-    /* Aşk Notu / Canlı Mesaj Panosu Bölümü */
+    /* Aşk Notu Bölümü */
     #loveNotesSection textarea {
       width: 100%;
       height: 80px;
@@ -289,19 +323,19 @@
       align-items: center;
       justify-content: space-between;
     }
-    /* İnteraktif Sevgi Termometresi: Animasyonlu Kalp */
-    #loveMeterSection {
-      text-align: center;
-      margin-top: 20px;
+    /* Sevgi Termometresi */
+    #loveMeterContainer {
+      width: 100%;
+      height: 20px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+      overflow: hidden;
     }
-    #loveMeterHeart {
-      font-size: 4rem;
-      color: #ff4b5c;
-      animation: beatAnimation 2s infinite;
-    }
-    @keyframes beatAnimation {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+    #loveMeterBar {
+      width: 0%;
+      height: 100%;
+      background: #ff4b5c;
+      transition: width 0.5s;
     }
   </style>
 </head>
@@ -344,7 +378,7 @@
     <button id="surpriseBtn">❤️</button>
     <div id="surpriseMessage"></div>
     
-    <!-- Ek Özellikler Alanı -->
+    <!-- Ek Özellikler Alanı (Başlık kaldırıldı) -->
     <div id="extraFeatures">
       <!-- Günün Romantik Mesajı -->
       <div id="dailyMessageSection" class="feature-section">
@@ -363,17 +397,19 @@
           <img src="https://r.resimlink.com/W-nJNZV24.jpg" alt="Fotoğraf">
         </div>
       </div>
-      <!-- Aşk Notu / Canlı Mesaj Panosu -->
+      <!-- Aşk Notu Bölümü -->
       <div id="loveNotesSection" class="feature-section">
-        <h3>Aşk Notu / Canlı Mesaj Panosu</h3>
+        <h3>Aşk Notu</h3>
         <textarea id="loveNoteInput" placeholder="Aşk notunu buraya yaz..."></textarea>
         <button id="saveNoteBtn">Kaydet</button>
         <ul id="notesList"></ul>
       </div>
-      <!-- İnteraktif Sevgi Termometresi -->
+      <!-- Sevgi Termometresi -->
       <div id="loveMeterSection" class="feature-section">
         <h3>Sevgi Termometresi</h3>
-        <div id="loveMeterHeart">♥</div>
+        <div id="loveMeterContainer">
+          <div id="loveMeterBar"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -396,25 +432,9 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    /* Dinamik Tema: Günün saatine göre arka plan gradient'ini ayarla */
-    function updateTheme() {
-      const now = new Date();
-      const hour = now.getHours();
-      let gradient;
-      if (hour >= 6 && hour < 18) {
-        // Gündüz: sıcak tonlar
-        gradient = "linear-gradient(-45deg, #ffafbd, #ffc3a0, #ffafbd, #ffc3a0)";
-      } else {
-        // Gece: daha soğuk tonlar
-        gradient = "linear-gradient(-45deg, #2c3e50, #4ca1af, #2c3e50, #4ca1af)";
-      }
-      document.body.style.background = gradient;
-      document.body.style.backgroundSize = "400% 400%";
-    }
-    updateTheme();
-    
-    /* Zaman hesaplama: Tanışma tarihi 3 Mart 2024 */
+    /* Zaman hesaplama */
     function updateTimer() {
+      // Tanışma tarihi: 3 Mart 2024 (JavaScript'te aylar 0-indexli, bu yüzden 2)
       const start = new Date(2024, 2, 3, 0, 0, 0);
       const now = new Date();
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
@@ -445,7 +465,7 @@
     updateTimer();
     setInterval(updateTimer, 1000);
     
-    // Pulse animasyonu (zaman kutularına tıklayınca)
+    // Pulse animasyonu
     document.querySelectorAll('.time div').forEach(div => {
       ['click', 'touchstart'].forEach(evt => {
         div.addEventListener(evt, () => {
@@ -455,7 +475,7 @@
       });
     });
     
-    // Sürpriz Butonu: Tıklayınca kalp sesi, animasyon, rastgele mesaj ve sevgi termometresi artışı
+    // Debounce for surprise button
     let surpriseBtnDisabled = false;
     const loveMessages = [
       "Sen benim en değerlimsin, hayatımın anlamı!",
@@ -550,6 +570,7 @@
       setTimeout(spawnFallingHeart, Math.random() * 2000 + 1000);
     }
     spawnFallingHeart();
+    
     function spawnFallingSnow() {
       const snow = document.createElement('div');
       snow.classList.add('falling-snow');
@@ -589,7 +610,7 @@
     }
     renderTimeline();
     
-    /********** AŞK NOTU / CANLI MESAJ PANOSU (Firebase ile) **********/
+    /********** AŞK NOTU (Firebase ile) **********/
     function renderNotes() {
       const notesList = document.getElementById('notesList');
       db.ref('loveNotes').on('value', (snapshot) => {
@@ -624,17 +645,13 @@
       }
     });
     
-    /********** İnteraktif Sevgi Termometresi: Animasyonlu Kalp **********/
+    // Sevgi Termometresi
     let loveMeterValue = 0;
     function incrementLoveMeter() {
       loveMeterValue = Math.min(loveMeterValue + 10, 100);
-      // Animasyon süresini hesapla: 2s (düşük) ile 0.5s (yüksek) arasında
-      let newDuration = 2 - (loveMeterValue / 100) * 1.5;
-      newDuration = Math.max(newDuration, 0.5);
-      document.getElementById('loveMeterHeart').style.animationDuration = newDuration + "s";
+      document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
-    // Başlangıç animasyon süresi ayarı
-    document.getElementById('loveMeterHeart').style.animationDuration = "2s";
+    document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     
     // İlk etkileşimde müziği başlat
     window.addEventListener('click', () => {
