@@ -113,10 +113,25 @@
       margin: 5px 0 0;
       font-size: 1rem;
     }
+    /* Mobil görünüm için düzenleme */
     @media (max-width: 600px) {
       .container h1 { font-size: 2rem; }
-      .time div h2 { font-size: 2rem; }
-      .time div p { font-size: 0.9rem; }
+      .time {
+        /* min-height kaldırıldı, esnek grid düzeni kullanılıyor */
+        min-height: auto;
+      }
+      .time div {
+        flex: 1 1 70px; /* Daha küçük kareler */
+        margin: 5px;
+        padding: 10px;
+      }
+      .time div h2 { 
+        font-size: 1.5rem; 
+        min-width: 40px;
+      }
+      .time div p { 
+        font-size: 0.8rem; 
+      }
     }
     /* Sürpriz butonu ve açıklama */
     #instruction {
