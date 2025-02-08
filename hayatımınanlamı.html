@@ -31,14 +31,9 @@
       min-height: 100vh;
       color: #fff;
       position: relative;
-      /* İçerik uzun olduğunda kaydırma sağlamak için: */
       overflow-y: auto;
       transition: background 0.5s;
       padding: 20px;
-    }
-    /* Alternatif tema (örneğin, farklı renk paleti) */
-    body.alt-theme {
-      background: linear-gradient(-45deg, #a18cd1, #fbc2eb, #a18cd1, #fbc2eb);
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -68,6 +63,34 @@
         opacity: 0;
       }
       20% { opacity: 0.9; }
+      100% {
+        transform: translateY(110vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+    /* Arka plan için düşen kar taneleri */
+    .floating-snow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .falling-snow {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      animation: fallSnow 8s linear forwards;
+    }
+    @keyframes fallSnow {
+      0% {
+        transform: translateY(-20px) scale(0.8);
+        opacity: 0;
+      }
+      20% { opacity: 0.8; }
       100% {
         transform: translateY(110vh) scale(1.2);
         opacity: 0;
@@ -132,12 +155,9 @@
       margin: 5px 0 0;
       font-size: 1rem;
     }
-    /* Mobil düzenleme: Zaman karolarını küçült */
     @media (max-width: 600px) {
       .container h1 { font-size: 2rem; }
-      .time {
-        min-height: auto;
-      }
+      .time { min-height: auto; }
       .time div {
         flex: 1 1 70px;
         margin: 5px;
@@ -190,7 +210,6 @@
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Pulse animasyonu */
     .pulse {
       animation: pulseAnimation 0.5s;
     }
@@ -199,7 +218,6 @@
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-    /* Butona tıklandığında ekranın üstüne doğru süzülen kalp */
     .click-heart {
       position: fixed;
       color: #ff4b5c;
@@ -269,7 +287,6 @@
       height: 100%;
       object-fit: cover;
     }
-    /* Kişisel Aşk Notu Bölümü */
     #loveNotesSection textarea {
       width: 100%;
       height: 80px;
@@ -307,16 +324,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-    /* Tema Değiştir */
-    #themeSection button {
-      background: #ff4b5c;
-      border: none;
-      padding: 8px 16px;
-      font-size: 1rem;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
     }
     /* Sevgi Termometresi */
     #loveMeterContainer {
@@ -363,6 +370,8 @@
   
   <!-- Floating hearts -->
   <div class="floating-hearts" id="floatingHearts"></div>
+  <!-- Floating snowflakes -->
+  <div class="floating-snow" id="floatingSnow"></div>
   
   <div class="container">
     <h1>Seni Seviyorum <span class="heart">&hearts;</span> Melike</h1>
@@ -411,7 +420,6 @@
         <div id="galleryContainer">
           <img id="galleryImage" src="https://picsum.photos/seed/1/600/400" alt="Fotoğraf">
         </div>
-        <!-- Fotoğraf düzenleme bölümü -->
         <div id="galleryEditSection">
           <input type="text" id="newGalleryImageInput" placeholder="Yeni fotoğraf URL'si">
           <button id="addGalleryImageBtn">Fotoğraf Ekle</button>
@@ -423,11 +431,6 @@
         <textarea id="loveNoteInput" placeholder="Aşk notunu buraya yaz..."></textarea>
         <button id="addNoteBtn">Not Ekle</button>
         <ul id="notesList"></ul>
-      </div>
-      <!-- Tema Değiştir -->
-      <div id="themeSection" class="feature-section">
-        <h3>Tema Değiştir</h3>
-        <button id="themeToggleBtn">Tema Değiştir</button>
       </div>
       <!-- Sevgi Termometresi -->
       <div id="loveMeterSection" class="feature-section">
@@ -459,7 +462,8 @@
     
     /* Zaman hesaplama */
     function updateTimer() {
-      const start = new Date(2024, 4, 7, 23, 37, 0);
+      // Tanışma tarihi: 3 Mart 2024 (JavaScript'te aylar 0-indexli, bu yüzden 2)
+      const start = new Date(2024, 2, 3, 0, 0, 0);
       const now = new Date();
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
       let anniversary = new Date(start);
@@ -560,7 +564,6 @@
         if (surpriseBtnDisabled) return;
         surpriseBtnDisabled = true;
         setTimeout(() => { surpriseBtnDisabled = false; }, 1000);
-        // Çalıştır: tıklama sesi
         const clickSound = document.getElementById('clickSound');
         if (clickSound) {
           clickSound.currentTime = 0;
@@ -570,7 +573,6 @@
         const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
         surpriseMessageDiv.textContent = randomMessage;
         surpriseMessageDiv.style.display = 'block';
-        // Sevgi termometresini arttır
         incrementLoveMeter();
       });
     });
@@ -597,6 +599,19 @@
     }
     spawnFallingHeart();
     
+    function spawnFallingSnow() {
+      const snow = document.createElement('div');
+      snow.classList.add('falling-snow');
+      snow.textContent = '❄';
+      snow.style.left = Math.random() * 100 + '%';
+      snow.style.fontSize = (Math.random() * 0.5 + 0.8) + 'rem';
+      snow.style.opacity = 0.9;
+      document.getElementById('floatingSnow').appendChild(snow);
+      setTimeout(() => { snow.remove(); }, 8000);
+      setTimeout(spawnFallingSnow, Math.random() * 3000 + 1000);
+    }
+    spawnFallingSnow();
+    
     // Günün Romantik Mesajı
     function setDailyMessage() {
       const dailyMessageElem = document.getElementById('dailyMessage');
@@ -608,11 +623,10 @@
     
     // Aşk Hikayesi Zaman Çizelgesi
     const timelineEvents = [
-      { date: '01/01/2023', event: 'Tanışma' },
-      { date: '14/02/2023', event: 'İlk Buluşma' },
-      { date: '01/03/2023', event: 'İlk Öpücük' },
-      { date: '01/04/2023', event: 'İlk Seyahat' },
-      { date: '14/02/2024', event: 'Yıl Dönümü' }
+      { date: '03/03/2024', event: 'Tanışma' },
+      { date: '01/07/2024', event: 'İlk Buluşma' },
+      { date: '08/07/2024', event: 'İlk Öpücük' },
+      { date: '07/05/2024', event: 'Yıl Dönümü' }
     ];
     function renderTimeline() {
       const timelineList = document.getElementById('timelineList');
@@ -627,7 +641,6 @@
     /********** FOTOĞRAF GALERİSİ (Firebase ile) **********/
     let galleryImages = [];
     let currentGalleryIndex = 0;
-    // Firebase'den galerideki resimleri oku:
     db.ref('galleryImages').on('value', (snapshot) => {
       const data = snapshot.val();
       galleryImages = data ? Object.values(data) : [];
@@ -661,7 +674,6 @@
         for (let key in notes) {
           const li = document.createElement('li');
           li.textContent = notes[key];
-          // Silme butonu ekleyelim:
           const delBtn = document.createElement('button');
           delBtn.textContent = 'Sil';
           delBtn.style.marginLeft = '10px';
@@ -683,17 +695,11 @@
       }
     });
     
-    // Tema Değiştir
-    document.getElementById('themeToggleBtn').addEventListener('click', () => {
-      document.body.classList.toggle('alt-theme');
-    });
-    
     // Sevgi Termometresi
-    let loveMeterValue = 0; // Global olarak tutuyoruz (Firebase de ekleyip çekmek de mümkün)
+    let loveMeterValue = 0;
     function incrementLoveMeter() {
       loveMeterValue = Math.min(loveMeterValue + 10, 100);
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
-      // Eğer isterseniz bu değeri Firebase'e de kaydedebilirsiniz
     }
     document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     
