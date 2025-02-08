@@ -7,14 +7,14 @@
   <!-- Google Fonts: Roboto, Roboto Mono, Dancing Script -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Tüm metinlerin seçilmesini devre dışı bırak */
+    /* Tüm metin seçimini devre dışı bırak */
     * {
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
     }
-    /* Dinamik arka plan için animasyonlu gradient (10s döngü, daha yoğun) */
+    /* Dinamik arka plan için animasyonlu gradient (10s, yoğun) */
     body {
       margin: 0;
       padding: 0;
@@ -25,10 +25,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       color: #fff;
       position: relative;
       overflow: hidden;
+      transition: background 0.5s;
+    }
+    /* Alternatif tema (örneğin, farklı renk paleti) */
+    body.alt-theme {
+      background: linear-gradient(-45deg, #a18cd1, #fbc2eb, #a18cd1, #fbc2eb);
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -63,7 +68,7 @@
         opacity: 0;
       }
     }
-    /* İçerik kutusu */
+    /* Ana içerik kutusu */
     .container {
       position: relative;
       z-index: 2;
@@ -73,6 +78,8 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       text-align: center;
       max-width: 600px;
+      width: 90%;
+      margin: 20px;
     }
     .container h1 {
       margin-bottom: 20px;
@@ -90,13 +97,13 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
-    /* Zaman dilimlerinin kutuları */
+    /* Zaman dilimi kutuları */
     .time {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
       margin-bottom: 20px;
-      min-height: 200px; /* Reflow sorununu engellemek için */
+      min-height: 200px;
     }
     .time div {
       flex: 1 1 100px;
@@ -113,21 +120,21 @@
     .time div h2 {
       margin: 0;
       font-size: 2.5rem;
-      min-width: 60px; /* Sayıların değişiminde yer kaymasını engeller */
+      min-width: 60px;
       font-family: 'Roboto Mono', monospace;
     }
     .time div p {
       margin: 5px 0 0;
       font-size: 1rem;
     }
-    /* Mobil düzen: Zaman karolarını daha küçük ve düzenli hale getirin */
+    /* Mobil düzenleme: Zaman karolarını küçült */
     @media (max-width: 600px) {
       .container h1 { font-size: 2rem; }
       .time {
         min-height: auto;
       }
       .time div {
-        flex: 1 1 70px; /* daha küçük karolar */
+        flex: 1 1 70px;
         margin: 5px;
         padding: 10px;
       }
@@ -139,12 +146,11 @@
         font-size: 0.8rem; 
       }
     }
-    /* Sürpriz butonu ve açıklama */
+    /* Sürpriz butonu */
     #instruction {
       margin: 10px 0;
       font-size: 1.2rem;
     }
-    /* Buton artık sadece kalp emojisi içeriyor */
     #surpriseBtn {
       background: #ff4b5c;
       border: none;
@@ -161,7 +167,7 @@
     #surpriseBtn:hover {
       background: #e63946;
     }
-    /* Sürpriz mesajı: Zarif, zarf benzeri bir görünüm ve romantik yazı tipi */
+    /* Romantik mesaj kutusu */
     #surpriseMessage {
       margin-top: 20px;
       padding: 20px;
@@ -169,7 +175,7 @@
       color: #333;
       border: 2px solid #fff;
       border-radius: 10px;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-family: 'Dancing Script', cursive;
       display: none;
       animation: fadeIn 0.5s forwards;
@@ -179,7 +185,7 @@
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Pulse animasyon: Zaman kutularına tıklanınca */
+    /* Pulse animasyonu */
     .pulse {
       animation: pulseAnimation 0.5s;
     }
@@ -188,7 +194,7 @@
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
-    /* Butona basıldığında ekranın üstüne doğru süzülen kalp */
+    /* Butona tıklandığında ekranın üstüne doğru süzülen kalp */
     .click-heart {
       position: fixed;
       color: #ff4b5c;
@@ -207,13 +213,123 @@
         transform: scale(2) translateY(-150px);
       }
     }
+    /* Ek Özellikler Bölümü */
+    #extraFeatures {
+      margin-top: 30px;
+      text-align: left;
+      background: rgba(255,255,255,0.2);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    #extraFeatures h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .feature-section {
+      margin-bottom: 20px;
+    }
+    .feature-section h3 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+      padding-bottom: 5px;
+    }
+    #dailyMessage {
+      font-size: 1.4rem;
+      font-family: 'Dancing Script', cursive;
+    }
+    #timelineList {
+      list-style: none;
+      padding-left: 0;
+    }
+    #timelineList li {
+      margin-bottom: 8px;
+      border-left: 2px solid #fff;
+      padding-left: 10px;
+      font-size: 1.2rem;
+    }
+    #galleryContainer {
+      width: 100%;
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    #galleryContainer img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #loveNotesSection textarea {
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+    #loveNotesSection button {
+      background: #ff4b5c;
+      border: none;
+      padding: 8px 16px;
+      font-size: 1rem;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    #loveNotesSection ul {
+      list-style: none;
+      padding-left: 0;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    #loveNotesSection ul li {
+      background: rgba(255,255,255,0.8);
+      color: #333;
+      padding: 5px 10px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.2rem;
+    }
+    #themeSection button {
+      background: #ff4b5c;
+      border: none;
+      padding: 8px 16px;
+      font-size: 1rem;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #loveMeterContainer {
+      width: 100%;
+      height: 20px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #loveMeterBar {
+      width: 0%;
+      height: 100%;
+      background: #ff4b5c;
+      transition: width 0.5s;
+    }
   </style>
 </head>
 <body>
-  <!-- Arka plan müzik öğesi (dosya yolunu kendinize göre ayarlayın) -->
+  <!-- Arka plan müziği -->
   <audio id="bgMusic" src="romantic.mp3" loop autoplay></audio>
+  <!-- Tıklama sesi -->
+  <audio id="clickSound" src="click.mp3"></audio>
   
-  <!-- Floating hearts arka plan container'ı -->
+  <!-- Floating hearts -->
   <div class="floating-hearts" id="floatingHearts"></div>
   
   <div class="container">
@@ -240,78 +356,97 @@
         <p>Saniye</p>
       </div>
     </div>
-    <!-- Butonun üstünde gösterilecek açıklama (isteğe bağlı) -->
     <p id="instruction">Tıkla</p>
-    <!-- Buton yazısı kalp emojisi -->
     <button id="surpriseBtn">❤️</button>
     <div id="surpriseMessage"></div>
+    
+    <!-- Ek Özellikler Bölümü -->
+    <div id="extraFeatures">
+      <h2>Ek Özellikler</h2>
+      <!-- Günün Romantik Mesajı -->
+      <div id="dailyMessageSection" class="feature-section">
+        <h3>Günün Romantik Mesajı</h3>
+        <p id="dailyMessage"></p>
+      </div>
+      <!-- Aşk Hikayesi Zaman Çizelgesi -->
+      <div id="timelineSection" class="feature-section">
+        <h3>Aşk Hikayesi Zaman Çizelgesi</h3>
+        <ul id="timelineList"></ul>
+      </div>
+      <!-- Fotoğraf Galerisi -->
+      <div id="gallerySection" class="feature-section">
+        <h3>Fotoğraf Galerisi</h3>
+        <div id="galleryContainer">
+          <img id="galleryImage" src="" alt="Fotoğraf">
+        </div>
+      </div>
+      <!-- Kişisel Aşk Notu Bölümü -->
+      <div id="loveNotesSection" class="feature-section">
+        <h3>Kişisel Aşk Notu Bölümü</h3>
+        <textarea id="loveNoteInput" placeholder="Aşk notunu buraya yaz..."></textarea>
+        <button id="addNoteBtn">Not Ekle</button>
+        <ul id="notesList"></ul>
+      </div>
+      <!-- Tema Değiştir -->
+      <div id="themeSection" class="feature-section">
+        <h3>Tema Değiştir</h3>
+        <button id="themeToggleBtn">Tema Değiştir</button>
+      </div>
+      <!-- Sevgi Termometresi -->
+      <div id="loveMeterSection" class="feature-section">
+        <h3>Sevgi Termometresi</h3>
+        <div id="loveMeterContainer">
+          <div id="loveMeterBar"></div>
+        </div>
+      </div>
+    </div>
   </div>
   
   <script>
     /* Zaman hesaplama */
     function updateTimer() {
-      // Başlangıç tarihi: 7 Mayıs 2024, 23:37
       const start = new Date(2024, 4, 7, 23, 37, 0);
       const now = new Date();
-      
-      // Toplam geçen ay sayısını hesaplıyoruz.
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-      
-      // "Aylık yıl dönümü" hesaplaması:
       let anniversary = new Date(start);
       anniversary.setMonth(start.getMonth() + totalMonths);
-      
-      // Eğer "aylık yıl dönümü" bugünden sonra ise, tam bir ay geçmemiş demektir.
       if (anniversary > now) {
         totalMonths--;
         anniversary = new Date(start);
         anniversary.setMonth(start.getMonth() + totalMonths);
       }
-      
-      // Geçen gün, saat, dakika, saniyeyi hesaplıyoruz.
       let diff = now - anniversary;
       const msInDay = 1000 * 60 * 60 * 24;
       const msInHour = 1000 * 60 * 60;
       const msInMinute = 1000 * 60;
-      
       const remainingDays = Math.floor(diff / msInDay);
       diff -= remainingDays * msInDay;
-      
       const remainingHours = Math.floor(diff / msInHour);
       diff -= remainingHours * msInHour;
-      
       const remainingMinutes = Math.floor(diff / msInMinute);
       diff -= remainingMinutes * msInMinute;
-      
       const remainingSeconds = Math.floor(diff / 1000);
-      
-      // Hesaplanan değerleri ilgili elementlere yazdırıyoruz.
       document.getElementById('months').textContent = totalMonths;
       document.getElementById('days').textContent = remainingDays;
       document.getElementById('hours').textContent = remainingHours;
       document.getElementById('minutes').textContent = remainingMinutes;
       document.getElementById('seconds').textContent = remainingSeconds;
     }
-    
     updateTimer();
     setInterval(updateTimer, 1000);
     
-    // Zaman kutuları için tıklama/dokunma olayları: pulse animasyonu
+    // Pulse animasyonu
     document.querySelectorAll('.time div').forEach(div => {
       ['click', 'touchstart'].forEach(evt => {
         div.addEventListener(evt, () => {
           div.classList.add('pulse');
-          setTimeout(() => {
-            div.classList.remove('pulse');
-          }, 500);
+          setTimeout(() => { div.classList.remove('pulse'); }, 500);
         });
       });
     });
     
-    // Debounce flag for surprise button
+    // Debounce for surprise button
     let surpriseBtnDisabled = false;
-    
-    // 50 adet romantik sürpriz mesajı
     const loveMessages = [
       "Sen benim en değerlimsin, hayatımın anlamı!",
       "Her anı seninle yaşamak, en güzel hayalim.",
@@ -364,69 +499,133 @@
       "Seni sevmek, en büyülü rüya gibi.",
       "Sen, hayatımın en parlak yıldızısın."
     ];
-    
-    // Butona basıldığında ekranda yukarı doğru süzülen kalp animasyonu oluşturma
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    const surpriseMessageDiv = document.getElementById('surpriseMessage');
+    ['click', 'touchstart'].forEach(evt => {
+      surpriseBtn.addEventListener(evt, () => {
+        if (surpriseBtnDisabled) return;
+        surpriseBtnDisabled = true;
+        setTimeout(() => { surpriseBtnDisabled = false; }, 1000);
+        // Çalıştır: tıklama sesi
+        const clickSound = document.getElementById('clickSound');
+        if (clickSound) {
+          clickSound.currentTime = 0;
+          clickSound.play();
+        }
+        spawnClickHeart(surpriseBtn);
+        const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+        surpriseMessageDiv.textContent = randomMessage;
+        surpriseMessageDiv.style.display = 'block';
+        // Sevgi termometresini arttır
+        incrementLoveMeter();
+      });
+    });
     function spawnClickHeart(button) {
       const heart = document.createElement('div');
       heart.classList.add('click-heart');
       heart.textContent = '♥';
-      // Butonun merkezinin konumunu alalım (viewport koordinatları)
       const rect = button.getBoundingClientRect();
       heart.style.left = (rect.left + rect.width / 2 - 10) + 'px';
       heart.style.top = (rect.top + rect.height / 2 - 10) + 'px';
       document.body.appendChild(heart);
-      
-      // Animasyon tamamlandıktan sonra elemanı kaldıralım
-      setTimeout(() => {
-        heart.remove();
-      }, 1500);
+      setTimeout(() => { heart.remove(); }, 1500);
     }
-    
-    // Sürpriz butonu işlevi: Rastgele mesaj göster (mesaj ekranda kalacak)
-    const surpriseBtn = document.getElementById('surpriseBtn');
-    const surpriseMessageDiv = document.getElementById('surpriseMessage');
-    
-    ['click', 'touchstart'].forEach(evt => {
-      surpriseBtn.addEventListener(evt, (e) => {
-        if (surpriseBtnDisabled) return; // Buton 1 saniye boyunca devre dışı
-        surpriseBtnDisabled = true;
-        setTimeout(() => { surpriseBtnDisabled = false; }, 1000); // 1 saniyelik debounce
-        
-        // Butona basıldığında ekranın üstüne doğru süzülen kalp animasyonu oluştur
-        spawnClickHeart(surpriseBtn);
-        
-        // Rastgele bir mesaj seç ve göster (önceki mesaj üzerine yazılıyor)
-        const randomMessage = loveMessages[Math.floor(Math.random() * loveMessages.length)];
-        surpriseMessageDiv.textContent = randomMessage;
-        surpriseMessageDiv.style.display = 'block';
-      });
-    });
-    
-    // Arka planda düşen kalpler: Daha sık ve yoğun olması için, kendini çağıran fonksiyon
     function spawnFallingHeart() {
       const heart = document.createElement('div');
       heart.classList.add('falling-heart');
       heart.textContent = '♥';
-      // Rastgele sol konum (%)
       heart.style.left = Math.random() * 100 + '%';
       heart.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
       heart.style.opacity = 0.8;
       document.getElementById('floatingHearts').appendChild(heart);
-      setTimeout(() => {
-        heart.remove();
-      }, 6000);
-      // Bir sonraki kalp için rastgele süre (1 - 3 saniye)
+      setTimeout(() => { heart.remove(); }, 6000);
       setTimeout(spawnFallingHeart, Math.random() * 2000 + 1000);
     }
-    // İlk düşen kalbi başlat
     spawnFallingHeart();
     
-    // (Opsiyonel) İlk etkileşimde müziği başlatmak için:
+    // Günün Romantik Mesajı
+    function setDailyMessage() {
+      const dailyMessageElem = document.getElementById('dailyMessage');
+      const date = new Date();
+      const index = (date.getFullYear() + date.getMonth() + date.getDate()) % loveMessages.length;
+      dailyMessageElem.textContent = loveMessages[index];
+    }
+    setDailyMessage();
+    
+    // Aşk Hikayesi Zaman Çizelgesi
+    const timelineEvents = [
+      { date: '01/01/2023', event: 'Tanışma' },
+      { date: '14/02/2023', event: 'İlk Buluşma' },
+      { date: '01/03/2023', event: 'İlk Öpücük' },
+      { date: '01/04/2023', event: 'İlk Seyahat' },
+      { date: '14/02/2024', event: 'Yıl Dönümü' }
+    ];
+    function renderTimeline() {
+      const timelineList = document.getElementById('timelineList');
+      timelineEvents.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item.date + ' - ' + item.event;
+        timelineList.appendChild(li);
+      });
+    }
+    renderTimeline();
+    
+    // Fotoğraf Galerisi
+    const galleryImages = [
+      'https://picsum.photos/seed/1/600/400',
+      'https://picsum.photos/seed/2/600/400',
+      'https://picsum.photos/seed/3/600/400'
+    ];
+    let currentGalleryIndex = 0;
+    function updateGallery() {
+      const galleryImage = document.getElementById('galleryImage');
+      galleryImage.src = galleryImages[currentGalleryIndex];
+      currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
+    }
+    updateGallery();
+    setInterval(updateGallery, 3000);
+    
+    // Kişisel Aşk Notu Bölümü
+    const loveNotes = JSON.parse(localStorage.getItem('loveNotes')) || [];
+    function renderNotes() {
+      const notesList = document.getElementById('notesList');
+      notesList.innerHTML = '';
+      loveNotes.forEach(note => {
+        const li = document.createElement('li');
+        li.textContent = note;
+        notesList.appendChild(li);
+      });
+    }
+    renderNotes();
+    document.getElementById('addNoteBtn').addEventListener('click', () => {
+      const noteInput = document.getElementById('loveNoteInput');
+      const note = noteInput.value.trim();
+      if (note) {
+        loveNotes.push(note);
+        localStorage.setItem('loveNotes', JSON.stringify(loveNotes));
+        noteInput.value = '';
+        renderNotes();
+      }
+    });
+    
+    // Tema Değiştir
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      document.body.classList.toggle('alt-theme');
+    });
+    
+    // Sevgi Termometresi
+    let loveMeterValue = parseInt(localStorage.getItem('loveMeterValue')) || 0;
+    function incrementLoveMeter() {
+      loveMeterValue = Math.min(loveMeterValue + 10, 100);
+      localStorage.setItem('loveMeterValue', loveMeterValue);
+      document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
+    }
+    document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
+    
+    // İlk etkileşimde müziği başlat
     window.addEventListener('click', () => {
       const bgMusic = document.getElementById('bgMusic');
-      if (bgMusic.paused) {
-        bgMusic.play();
-      }
+      if (bgMusic.paused) { bgMusic.play(); }
     });
   </script>
 </body>
