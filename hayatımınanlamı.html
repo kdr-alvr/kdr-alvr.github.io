@@ -152,7 +152,7 @@
       .time div h2 { font-size: 1.5rem; min-width: 40px; }
       .time div p { font-size: 0.8rem; }
     }
-    /* Sürpriz (kalp) butonu ve mute butonu */
+    /* Sürpriz (kalp) butonu */
     #instruction { margin: 10px 0; font-size: 1.2rem; }
     #surpriseBtn {
       background: #ff4b5c;
@@ -168,19 +168,6 @@
       overflow: visible;
     }
     #surpriseBtn:hover { background: #e63946; }
-    #muteBtn {
-      background: #ff4b5c;
-      border: none;
-      padding: 10px 20px;
-      font-size: 1.5rem;
-      color: #fff;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: background 0.3s;
-      margin-left: 20px;
-      outline: none;
-    }
-    #muteBtn:hover { background: #e63946; }
     /* Romantik mesaj kutusu */
     #surpriseMessage {
       margin-top: 20px;
@@ -217,7 +204,7 @@
       0% { opacity: 1; transform: scale(1) translateY(0); }
       100% { opacity: 0; transform: scale(2) translateY(-150px); }
     }
-    /* Ek Özellikler alanı: Kenar boşluklarını genişleterek full width et */
+    /* Ek Özellikler alanı: Kenar boşlukları genişletildi */
     #extraFeatures {
       margin-top: 30px;
       text-align: left;
@@ -311,6 +298,18 @@
       background: #ff4b5c;
       transition: width 0.5s;
     }
+    /* Footer notu */
+    #footerNote {
+      margin-top: 30px;
+      font-size: 1rem;
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+    }
+    /* Sevgi Termometresi yer değiştirme: Sürpriz butonundan biraz daha aşağıya */
+    #loveMeterSection {
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
@@ -350,9 +349,8 @@
     </div>
     <p id="instruction">Tıkla</p>
     <button id="surpriseBtn">❤️</button>
-    <button id="muteBtn">🔊</button>
     <div id="surpriseMessage"></div>
-    <!-- Sevgi Termometresi (kalp butonunun hemen altında) -->
+    <!-- Sevgi Termometresi (Sürpriz butonundan biraz daha aşağıda) -->
     <div id="loveMeterSection">
       <div id="loveMeterContainer">
         <div id="loveMeterBar"></div>
@@ -385,6 +383,10 @@
         <ul id="notesList"></ul>
       </div>
     </div>
+    <!-- Alt Not: En altta gösterilecek not -->
+    <div id="footerNote">
+      <p>Bu site Kadır'ın kalbine, Kadır'ın kalbi de Melike Pınar'a aittir.</p>
+    </div>
   </div>
   
   <script>
@@ -407,7 +409,7 @@
     
     /* Zaman hesaplama */
     function updateTimer() {
-      // Tanışma tarihi: 3 Mart 2024 (aylar 0-indexli)
+      // Tanışma tarihi: 3 Mart 2024 (JavaScript’te aylar 0-indexli, bu yüzden 2)
       const start = new Date(2024, 2, 3, 0, 0, 0);
       const now = new Date();
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
@@ -641,26 +643,16 @@
           setTimeout(() => { heart.remove(); }, 2000);
         }, i * 100);
       }
+      // Termometre sıfırlansın
+      loveMeterValue = 0;
+      document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
     
-    // Mute / Unmute butonu
-    document.getElementById('muteBtn').addEventListener('click', function() {
-      const bgMusic = document.getElementById('bgMusic');
-      if(bgMusic.muted) {
-        bgMusic.muted = false;
-        this.textContent = '🔊';
-      } else {
-        bgMusic.muted = true;
-        this.textContent = '🔇';
-      }
-    });
-    
-    // İlk etkileşimde müziği başlat ve unmute et
+    // İlk etkileşimde müziği aç (unmute) ve çalmaya başlat
     window.addEventListener('click', () => {
       const bgMusic = document.getElementById('bgMusic');
       if(bgMusic.muted) {
         bgMusic.muted = false;
-        document.getElementById('muteBtn').textContent = '🔊';
       }
       if (bgMusic.paused) { bgMusic.play(); }
     });
