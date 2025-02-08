@@ -238,23 +238,16 @@
         transform: scale(2) translateY(-150px);
       }
     }
-    /* Ek Özellikler Bölümü */
+    /* Ek Özellikler alanı (başlık kaldırıldı) */
     #extraFeatures {
       margin-top: 30px;
       text-align: left;
       background: rgba(255,255,255,0.2);
       padding: 20px;
       border-radius: 10px;
+      border: 3px solid rgba(0,0,0,0.5);
     }
-    #extraFeatures h2 {
-      font-family: 'Dancing Script', cursive;
-      font-size: 2rem;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    .feature-section {
-      margin-bottom: 20px;
-    }
+    /* Timeline, Fotoğraf Galerisi ve Aşk Notu gibi alt bölümlerin başlıkları */
     .feature-section h3 {
       font-family: 'Dancing Script', cursive;
       font-size: 1.8rem;
@@ -276,7 +269,7 @@
       padding-left: 10px;
       font-size: 1.2rem;
     }
-    /* Fotoğraf Galerisi: Sabit resim */
+    /* Sabit Resimli Galeri */
     #galleryContainer {
       width: 100%;
       height: 200px;
@@ -385,9 +378,8 @@
     <button id="surpriseBtn">❤️</button>
     <div id="surpriseMessage"></div>
     
-    <!-- Ek Özellikler Bölümü -->
+    <!-- Ek Özellikler Alanı (Başlık kaldırıldı) -->
     <div id="extraFeatures">
-      <h2>Ek Özellikler</h2>
       <!-- Günün Romantik Mesajı -->
       <div id="dailyMessageSection" class="feature-section">
         <h3>Günün Romantik Mesajı</h3>
@@ -398,7 +390,7 @@
         <h3>Aşk Hikayesi Zaman Çizelgesi</h3>
         <ul id="timelineList"></ul>
       </div>
-      <!-- Fotoğraf Galerisi (Sabit Resim) -->
+      <!-- Sabit Resimli Galeri -->
       <div id="gallerySection" class="feature-section">
         <h3>Fotoğraf Galerisi</h3>
         <div id="galleryContainer">
@@ -426,7 +418,7 @@
     /***** Firebase Konfigürasyonu *****
       Aşağıdaki firebaseConfig nesnesini kendi Firebase projenizden aldığınız değerlerle
       güncelleyin. Firebase konsolunda Realtime Database’i oluşturduktan sonra,
-      test aşaması için veritabanı kurallarını "read" ve "write" için herkese açık yapın.
+      test aşamasında veritabanı kurallarını "read" ve "write" için herkese açık yapın.
     ************************************/
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
@@ -643,8 +635,13 @@
       const noteInput = document.getElementById('loveNoteInput');
       const note = noteInput.value.trim();
       if (note) {
-        db.ref('loveNotes').push(note);
-        noteInput.value = '';
+        db.ref('loveNotes').push(note, function(error) {
+          if (error) {
+            alert('Not kaydedilemedi.');
+          } else {
+            noteInput.value = '';
+          }
+        });
       }
     });
     
