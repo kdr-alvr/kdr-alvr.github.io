@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geçen Süre Sayacı</title>
+  <!-- Google Fonts ile güzel bir yazı tipi ekledik -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Genel stil */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+    /* İçerik kutusu */
+    .container {
+      background: rgba(0,0,0,0.4);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .container h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+    /* Zaman dilimlerinin kutuları */
+    .time {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+    .time div {
+      flex: 1 1 100px;
+      margin: 10px;
+      background: rgba(255,255,255,0.2);
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .time div h2 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .time div p {
+      margin: 5px 0 0;
+      font-size: 1rem;
+    }
+    @media (max-width: 600px) {
+      .container h1 { font-size: 1.5rem; }
+      .time div h2 { font-size: 2rem; }
+      .time div p { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>7 Mayıs 2024, 23:37'den beri geçen süre</h1>
+    <div class="time">
+      <div>
+        <h2 id="months">0</h2>
+        <p>Ay</p>
+      </div>
+      <div>
+        <h2 id="days">0</h2>
+        <p>Gün</p>
+      </div>
+      <div>
+        <h2 id="hours">0</h2>
+        <p>Saat</p>
+      </div>
+      <div>
+        <h2 id="minutes">0</h2>
+        <p>Dakika</p>
+      </div>
+      <div>
+        <h2 id="seconds">0</h2>
+        <p>Saniye</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function updateTimer() {
+      // Başlangıç tarihi: 7 Mayıs 2024, 23:37
+      const start = new Date(2024, 4, 7, 23, 37, 0);
+      const now = new Date();
+      
+      /* 
+         Önce tam geçen ay sayısını hesaplıyoruz.
+         (Yıl farkı * 12) + ay farkı veriyor.
+      */
+      let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+      
+      // Başlangıç tarihine tam geçen ay sayısını ekleyerek "aylık yıl dönümü" hesaplıyoruz.
+      let anniversary = new Date(start);
+      anniversary.setMonth(start.getMonth() + totalMonths);
+      
+      // Eğer yıl dönümü (ay eklemesiyle oluşan tarih) 'now'dan sonra ise, henüz tam bir ay geçmemiş demektir.
+      if (anniversary > now) {
+        totalMonths--;
+        anniversary = new Date(start);
+        anniversary.setMonth(start.getMonth() + totalMonths);
+      }
+      
+      // Kalan zamanı (gün, saat, dakika, saniye) hesaplıyoruz.
+      let diff = now - anniversary;
+      const msInDay = 1000 * 60 * 60 * 24;
+      const msInHour = 1000 * 60 * 60;
+      const msInMinute = 1000 * 60;
+      
+      const remainingDays = Math.floor(diff / msInDay);
+      diff -= remainingDays * msInDay;
+      
+      const remainingHours = Math.floor(diff / msInHour);
+      diff -= remainingHours * msInHour;
+      
+      const remainingMinutes = Math.floor(diff / msInMinute);
+      diff -= remainingMinutes * msInMinute;
+      
+      const remainingSeconds = Math.floor(diff / 1000);
+      
+      // Sonuçları sayfadaki ilgili elementlere yazdırıyoruz.
+      document.getElementById('months').textContent = totalMonths;
+      document.getElementById('days').textContent = remainingDays;
+      document.getElementById('hours').textContent = remainingHours;
+      document.getElementById('minutes').textContent = remainingMinutes;
+      document.getElementById('seconds').textContent = remainingSeconds;
+    }
+    
+    // Sayfa yüklendiğinde ve her saniye güncellemek için
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+</html>
