@@ -662,21 +662,19 @@
 <audio autoplay loop>
     <source src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr.github.io/main/Meltem.mp3" type="audio/mpeg">
 </audio>
-<audio id="music" src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr.github.io/main/Meltem.mp3"></audio>
+/* Ses Butonunun Tasarımı */
+.volumeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
 
-<button id="playPauseBtn">🎵 Müziği Başlat</button>
+.volumeButton:hover {
+  transform: scale(1.2);  /* Hover efekti ile büyür */
+}
 
-<script>
-  const music = document.getElementById("music");
-  const playPauseBtn = document.getElementById("playPauseBtn");
-
-  playPauseBtn.addEventListener("click", function () {
-    if (music.paused) {
-      music.play();
-      playPauseBtn.textContent = "⏸ Müziği Durdur";
-    } else {
-      music.pause();
-      playPauseBtn.textContent = "▶ Müziği Başlat";
-    }
-  });
-</script>
+.volumeIcon {
+  width: 40px;
+  height: 40px;
+}
