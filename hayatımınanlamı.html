@@ -647,21 +647,18 @@
       loveMeterValue = 0;
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
-    <!-- Müzik Dosyasını Yükleyelim -->
-<audio id="bgMusic" src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr.github.io/main/muzik.mp3" autoplay loop muted></audio>
+<audio autoplay loop>
+    <source src="https://raw.githubusercontent.com/KULLANICI_ADI/REPO_ADI/main/müzik.mp3" type="audio/mpeg">
+</audio>
 
-<!-- Ses Açma/Kapama Butonu -->
-<button id="muteBtn">🔊</button>
-<script>
-  // Mute / Unmute butonu
-  document.getElementById('muteBtn').addEventListener('click', function() {
-    const bgMusic = document.getElementById('bgMusic');
-    if(bgMusic.muted) {
-      bgMusic.muted = false;
-      this.textContent = '🔊'; // Ses Açık
-    } else {
-      bgMusic.muted = true;
-      this.textContent = '🔇'; // Ses Kapalı
-    }
-  });
-</script>
+    // Mute / Unmute butonu
+    document.getElementById('muteBtn').addEventListener('click', function() {
+      const bgMusic = document.getElementById('bgMusic');
+      if(bgMusic.muted) {
+        bgMusic.muted = false;
+        this.textContent = '🔊';
+      } else {
+        bgMusic.muted = true;
+        this.textContent = '🔇';
+      }
+    });
