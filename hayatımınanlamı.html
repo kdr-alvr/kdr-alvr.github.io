@@ -385,7 +385,7 @@
     </div>
     <!-- Alt Not: En altta gösterilecek not -->
     <div id="footerNote">
-      <p>Bu site Kadir'in kalbine, Kadir'in kalbi de Melike Pınar'a aittir.</p>
+      <p>Bu site Kadır'ın kalbine, Kadır'ın kalbi de Melike Pınar'a aittir.</p>
     </div>
   </div>
   
@@ -647,10 +647,10 @@
       loveMeterValue = 0;
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
-<audio autoplay loop>
-    <source src="https://raw.githubusercontent.com/KULLANICI_ADI/REPO_ADI/main/müzik.mp3" type="audio/mpeg">
-</audio>
-
+    
+    // İlk etkileşimde müziği aç (unmute) ve çalmaya başlat
+<audio id="music" src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr/main/Meltem.mp3"></audio>
+  
     // Mute / Unmute butonu
     document.getElementById('muteBtn').addEventListener('click', function() {
       const bgMusic = document.getElementById('bgMusic');
