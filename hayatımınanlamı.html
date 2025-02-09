@@ -647,30 +647,21 @@
       loveMeterValue = 0;
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
-    
-    // İlk etkileşimde müziği aç (unmute) ve çalmaya başlat
-    window.addEventListener('click', () => {
-      const bgMusic = document.getElementById('bgMusic');
-      if(bgMusic.muted) {
-        bgMusic.muted = false;
-      }
-      if (bgMusic.paused) { bgMusic.play(); }
-    });
-  </script>
-</body>
-</html>
-<audio autoplay loop>
-    <source src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr.github.io/main/Meltem.mp3" type="audio/mpeg">
-</audio>
- // Mute / Unmute butonu
-    document.getElementById('muteBtn').addEventListener('click', function() {
-      const bgMusic = document.getElementById('bgMusic');
-      if(bgMusic.muted) {
-        bgMusic.muted = false;
-        this.textContent = '🔊';
-      } else {
-        bgMusic.muted = true;
-        this.textContent = '🔇';
-      }
-    });
-    
+    <!-- Müzik Dosyasını Yükleyelim -->
+<audio id="bgMusic" src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr.github.io/main/muzik.mp3" autoplay loop muted></audio>
+
+<!-- Ses Açma/Kapama Butonu -->
+<button id="muteBtn">🔊</button>
+<script>
+  // Mute / Unmute butonu
+  document.getElementById('muteBtn').addEventListener('click', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    if(bgMusic.muted) {
+      bgMusic.muted = false;
+      this.textContent = '🔊'; // Ses Açık
+    } else {
+      bgMusic.muted = true;
+      this.textContent = '🔇'; // Ses Kapalı
+    }
+  });
+</script>
