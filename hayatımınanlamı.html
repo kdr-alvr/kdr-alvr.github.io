@@ -662,3 +662,15 @@
 <audio autoplay loop>
     <source src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr.github.io/main/Meltem.mp3" type="audio/mpeg">
 </audio>
+ // Mute / Unmute butonu
+    document.getElementById('muteBtn').addEventListener('click', function() {
+      const bgMusic = document.getElementById('bgMusic');
+      if(bgMusic.muted) {
+        bgMusic.muted = false;
+        this.textContent = '🔊';
+      } else {
+        bgMusic.muted = true;
+        this.textContent = '🔇';
+      }
+    });
+    
