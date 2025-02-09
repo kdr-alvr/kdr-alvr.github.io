@@ -410,7 +410,7 @@
     /* Zaman hesaplama */
     function updateTimer() {
       // Tanışma tarihi: 3 Mart 2024 (JavaScript’te aylar 0-indexli, bu yüzden 2)
-      const start = new Date(2024, 4, 7, 0, 0, 0);
+      const start = new Date(2024, 2, 3, 0, 0, 0);
       const now = new Date();
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
       let anniversary = new Date(start);
@@ -648,17 +648,3 @@
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
     
-    // İlk etkileşimde müziği aç (unmute) ve çalmaya başlat
-<audio id="music" src="https://raw.githubusercontent.com/kdr-alvr/kdr-alvr/main/Meltem.mp3"></audio>
-  
-    // Mute / Unmute butonu
-    document.getElementById('muteBtn').addEventListener('click', function() {
-      const bgMusic = document.getElementById('bgMusic');
-      if(bgMusic.muted) {
-        bgMusic.muted = false;
-        this.textContent = '🔊';
-      } else {
-        bgMusic.muted = true;
-        this.textContent = '🔇';
-      }
-    });
