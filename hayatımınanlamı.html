@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Seni Seviyorum Melike - Kaç Aydır Sevgiliyiz?</title>
+  <title>Seni Seviyorum Melike</title>
   <!-- Google Fonts: Roboto, Roboto Mono, Dancing Script -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <!-- Firebase (compat sürümünü kullanıyoruz) -->
@@ -385,7 +385,7 @@
     </div>
     <!-- Alt Not: En altta gösterilecek not -->
     <div id="footerNote">
-      <p>Bu site Kadır'ın kalbine, Kadır'ın kalbi de Melike Pınar'a aittir.</p>
+      <p>Bu site Kadir'in kalbine, Kadir'in kalbi de Melike Pınar'a aittir.</p>
     </div>
   </div>
   
@@ -410,7 +410,7 @@
     /* Zaman hesaplama */
     function updateTimer() {
       // Tanışma tarihi: 3 Mart 2024 (JavaScript’te aylar 0-indexli, bu yüzden 2)
-      const start = new Date(2024, 2, 3, 0, 0, 0);
+      const start = new Date(2024, 4, 7, 0, 0, 0);
       const now = new Date();
       let totalMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
       let anniversary = new Date(start);
@@ -648,3 +648,14 @@
       document.getElementById('loveMeterBar').style.width = loveMeterValue + '%';
     }
     
+    // İlk etkileşimde müziği aç (unmute) ve çalmaya başlat
+    window.addEventListener('click', () => {
+      const bgMusic = document.getElementById('bgMusic');
+      if(bgMusic.muted) {
+        bgMusic.muted = false;
+      }
+      if (bgMusic.paused) { bgMusic.play(); }
+    });
+  </script>
+</body>
+</html>
